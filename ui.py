@@ -1,35 +1,284 @@
 import time
+import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 
-schools ={
-    'attaufiq' : {
-         'school' : 'MIS ATTAUFIQ',
-         'xpath' : '/html/body/div[3]/div[2]/div[2]/div/div[6]/button',
-         'phoneNumber': '82119221427',
-         'desa': '/html/body/div[3]/div[2]/div[4]/div/div[6]/button'
-     },
-    'balekambang' : {
-         'school' : 'MIS BALEKAMBANG',
-         'xpath' : '/html/body/div[3]/div[2]/div[2]/div/div[7]/button',
-         'phoneNumber': '81214133967',
-         'desa': '/html/body/div[3]/div[2]/div[4]/div/div[2]/button'
-     },
-     'duabojongasih': {
-        'school' : 'SDN 2  BOJONGASIH',
-        'xpath' : '/html/body/div[3]/div[2]/div[2]/div/div[17]/button',
-        'phoneNumber': '85287424436',
-        'desa': '/html/body/div[3]/div[2]/div[4]/div/div[4]/button'
-     }
+schools = {
+    "mas_al_istiqlaliyyah": {
+        "school": "MAS AL-ISTIQLALIYYAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MAS AL-ISTIQLALIYYAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mas_fathu_al_mustagitsin": {
+        "school": "MAS Fathu Al-Mustagitsin",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MAS Fathu Al-Mustagitsin"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mas_khoerul_falah": {
+        "school": "MAS KHOERUL FALAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MAS KHOERUL FALAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mas_plus_al_wathoniyah": {
+        "school": "MAS Plus Al-Wathoniyah",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MAS Plus Al-Wathoniyah"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mi_plus_tahfidz_khoerul_falah": {
+        "school": "MI PLUS TAHFIDZ KHOERUL FALAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MI PLUS TAHFIDZ KHOERUL FALAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mis_attaufiq": {
+        "school": "MIS ATTAUFIQ",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MIS ATTAUFIQ"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mis_balekambang": {
+        "school": "MIS BALEKAMBANG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MIS BALEKAMBANG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mis_cililitan": {
+        "school": "MIS CILILITAN",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MIS CILILITAN"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mis_miftahul_falah": {
+        "school": "MIS MIFTAHUL FALAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MIS MIFTAHUL FALAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mtss_al_wathoniyah": {
+        "school": "MTSS AL-WATHONIYAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MTSS AL-WATHONIYAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mtss_khoerul_falah": {
+        "school": "MTSS KHOERUL FALAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MTSS KHOERUL FALAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mtss_nurhidayah": {
+        "school": "MTSS NURHIDAYAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MTSS NURHIDAYAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mtss_sa_fathu_al_mustagitsin": {
+        "school": "MTSS SA FATHU AL-MUSTAGITSIN",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MTSS SA FATHU AL-MUSTAGITSIN"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mtss_miftahul_ulum": {
+        "school": "MTsS MIFTAHUL ULUM",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MTsS MIFTAHUL ULUM"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "mtss_tholabul_hidayah": {
+        "school": "MTsS THOLABUL HIDAYAH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MTsS THOLABUL HIDAYAH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_1_sukamaju": {
+        "school": "SDN 1 SUKAMAJU",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN 1 SUKAMAJU"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_2_bojongasih": {
+        "school": "SDN 2  BOJONGASIH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN 2 BOJONGASIH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_2_toblongan": {
+        "school": "SDN 2 TOBLONGAN",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN 2 TOBLONGAN"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_balaudang": {
+        "school": "SDN BALAUDANG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN BALAUDANG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_banyuresmi": {
+        "school": "SDN BANYURESMI",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN BANYURESMI"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_bojongasih_i": {
+        "school": "SDN BOJONGASIH I",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN BOJONGASIH I"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_bojongasih_iii": {
+        "school": "SDN BOJONGASIH III",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN BOJONGASIH III"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_cibeusi": {
+        "school": "SDN CIBEUSI",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN CIBEUSI"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_cilumpang": {
+        "school": "SDN CILUMPANG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN CILUMPANG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_cipaku": {
+        "school": "SDN CIPAKU",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN CIPAKU"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_cipedes": {
+        "school": "SDN CIPEDES",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN CIPEDES"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_kiarakoneng": {
+        "school": "SDN KIARAKONENG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN KIARAKONENG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_negla": {
+        "school": "SDN NEGLA",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN NEGLA"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_padahayu": {
+        "school": "SDN PADAHAYU",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN PADAHAYU"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sdn_tamanggung": {
+        "school": "SDN TAMANGGUNG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN TAMANGGUNG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "sma_terpadu_salman_al_farisi": {
+        "school": "SMA TERPADU SALMAN AL-FARISI",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMA TERPADU SALMAN AL-FARISI"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smas_it_miftahulhuda": {
+        "school": "SMAS IT MIFTAHULHUDA",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMAS IT MIFTAHULHUDA"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smks_swadaya_bojongasih": {
+        "school": "SMKS SWADAYA BOJONGASIH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMKS SWADAYA BOJONGASIH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smks_ypi_khoerul_falah_jompong": {
+        "school": "SMKS YPI KHOERUL FALAH JOMPONG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMKS YPI KHOERUL FALAH JOMPONG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smp_islam_miftahul_huda": {
+        "school": "SMP ISLAM MIFTAHUL HUDA",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMP ISLAM MIFTAHUL HUDA"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smp_terpadu_miftahul_huda_bojongkoneng": {
+        "school": "SMP TERPADU MIFTAHUL HUDA BOJONGKONENG",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMP TERPADU MIFTAHUL HUDA BOJONGKONENG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smpn_1_bojongasih": {
+        "school": "SMPN 1 BOJONGASIH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMPN 1 BOJONGASIH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smpn_satu_atap_1_bojongasih": {
+        "school": "SMPN SATU ATAP 1 BOJONGASIH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMPN SATU ATAP 1 BOJONGASIH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
+    "smpn_satu_atap_2_bojongasih": {
+        "school": "SMPN SATU ATAP 2 BOJONGASIH",
+        "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SMPN SATU ATAP 2 BOJONGASIH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+        "phoneNumber": "",
+        "desa": "",
+    },
 }
 
-schoolData = schools['duabojongasih'] 
+classSearch = {
+    "1": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 1"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "2": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 2"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "3": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 3"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "4": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 4"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "5": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 5"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "6": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 6"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "7": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 7"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "8": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 8"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "9": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 9"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "10": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 10"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "11": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 11"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+    "12": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="Kelas 12"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
+}
+
+schoolData = schools["sdn_2_bojongasih"]
 
 phoneNumber = schoolData['phoneNumber']
 school = schoolData['school']
 classSchool = '2'
+
+def set_school(school_key: str) -> None:
+    global schoolData, phoneNumber, school
+    if school_key in schools:
+        schoolData = schools[school_key]
+    else:
+        for value in schools.values():
+            if value.get("school") == school_key:
+                schoolData = value
+                break
+    phoneNumber = schoolData.get("phoneNumber", "")
+    school = schoolData.get("school", "")
+
+
+def set_class_school(value: str) -> None:
+    global classSchool
+    classSchool = str(value)
 
 
 kelas = {
@@ -97,7 +346,7 @@ def modal(driver):
     continue_button.click()
 
 def goToCKGSchool(driver):
-    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[3]/div/button')
+    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[2]/div/button')
     button_menu.click()
     time.sleep(1)
     button_ckg = driver.find_element("xpath", '//*[@id="menu_cari/daftarkan_individu"]')
@@ -180,54 +429,40 @@ def submitForm(driver, data):
     if nik_value.startswith("'"):
         nik_value = nik_value[1:]
     input_nik.send_keys(nik_value)
-    input_name = driver.find_element("xpath", '//*[@id="Nama Lengkap"]')
-    input_name.send_keys(data['name'])
     time.sleep(0.5)
-    inputDate(driver, data['date'])
-    time.sleep(0.5)
-    jenis_kelamin = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]')
-    jenis_kelamin.click()
-    time.sleep(0.5)
-    # Pilih jenis kelamin berdasarkan data['gender']
-    if data['gender'] == "L":
-        gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[1]')
-    else:
-        gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[2]')
-    gender_option.click()
-    time.sleep(0.5)
-    marital_status = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[6]/div/div[2]')
-    marital_status.click()
-    time.sleep(0.5)
-    marital_status_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[6]/div/div[2]/div[3]/div/div[3]')
-    marital_status_option.click()
-    time.sleep(0.5)
-    disability = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[7]/div/div[2]')
-    disability.click()
-    time.sleep(0.5)
-    disability_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[7]/div/div[2]/div[3]/div/div[1]')
-    disability_option.click()
-    time.sleep(0.5)
-    input_phone = driver.find_element("xpath", '//*[@id="No Whatsapp"]')
-    input_phone.send_keys(phoneNumber)
-    time.sleep(0.5)
-    inputSchool(driver)
-    time.sleep(0.5)
-    study = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[12]/div/div/div[2]')
+    button_search = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[1]/div[2]/div[1]/div[2]/button')
+    button_search.click()
+    time.sleep(1)
+    try: 
+        successButton = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div[2]/div[2]/div/div/div[4]/div[2]/button')
+        successButton.click()
+        time.sleep(1)
+        return selectAndFinish(driver, data)
+    except Exception:
+        print("Gagal submit form", data['name'])
+        with open("failed_names.txt", "a", encoding="utf-8") as f:
+            f.write(data['name'] + "\n")
+        driver.refresh()
+        time.sleep(1)
+        return False
+
+
+def selectAndFinish(driver, data):
+    next_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[3]/div/button')
+    next_button.click()
+    time.sleep(1)
+    next_button2 = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div[2]/div[2]/div/div/div[3]/div/button')
+    next_button2.click()
+    time.sleep(1)
+    study = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[6]/div/div/div/div[2]/div')
     study.click()
     time.sleep(0.5)
     study_option = driver.find_element("xpath", kelas[str(int(data['class']))])
     study_option.click()
     time.sleep(0.5)
-    address(driver)
-    time.sleep(0.5)
-    full_address = driver.find_element("xpath", '//*[@id="detail-domisili"]')
-    full_address.send_keys(data['address'])
-    time.sleep(0.5)
-    button_submit = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[2]/div/button')
-    button_submit.click()
-    time.sleep(3)
-
-    # Cek apakah muncul modal error
+    button_finish = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[11]/div[2]/button')
+    button_finish.click()
+    time.sleep(1)
     try:
         error_modal = driver.find_element("xpath", '/html/body/div[1]/div[2]/div/div[2]/img')
         if error_modal and error_modal.get_attribute("src") == "https://sehatindonesiaku.kemkes.go.id/images/icons/warning.png":
@@ -236,13 +471,15 @@ def submitForm(driver, data):
                 f.write(data['name'] + "\n")
             driver.refresh()
             time.sleep(1)
+            return False
         else:
             driver.refresh()
             time.sleep(1)
+            return True
     except Exception:
-        pass
         driver.refresh()
         time.sleep(1)
+        return True
         
 
 
@@ -278,7 +515,7 @@ def absence (driver):
     time.sleep(2)
 
 def goToCGKServices(driver):
-    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[3]/div/button')
+    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[2]/div/button')
     button_menu.click()
     time.sleep(1)
     button_ckg = driver.find_element("xpath", '//*[@id="menu_pelayanan"]')
@@ -286,18 +523,23 @@ def goToCGKServices(driver):
 
 
 def filterBySchoolAndClasses(driver):
-    school_select = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div[1]/div/div/div[2]')
+    school_select = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div/div[2]/div[1]/div/div/div')
     school_select.click()
     time.sleep(0.5)
     school_option = driver.find_element("xpath", f'//div[text()="{school}"]')
     school_option.click()
     time.sleep(0.5)
-    class_select = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div[2]/div/div/div[2]')
+    class_select = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div')
     class_select.click()
     time.sleep(0.5)
     class_option = driver.find_element("xpath", f'//div[text()="Kelas {classSchool}"]')
     class_option.click()
     time.sleep(0.5)
+    search_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div/div[2]/div[3]/div/button')
+    search_button.click()
+    time.sleep(1)
+
+
 
 def scanForm(driver, data):
     target_name = data['nama'].strip().upper()
@@ -353,8 +595,15 @@ def scanForm(driver, data):
 
 def fillScanningForm(driver, data):
     # Klik tombol “Mulai” di bagian atas halaman
-    start_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/button')
-    start_button.click()
+    try: 
+        start_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div[1]/button')
+        start_button.click()
+        time.sleep(0.5)
+        save_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div/div[4]/div[2]/button')
+        save_button.click()
+        time.sleep(1)
+    except Exception:
+        pass
     time.sleep(1)
     inputGizi(driver, data)
     inputTensi(driver, data)
@@ -369,7 +618,7 @@ def goToCGKServ(driver):
 
 
 def inputGizi(driver, data):
-     input_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[5]/div[2]/div[2]/div[2]/div/div/div/div/div[4]/div/button')
+     input_button = driver.find_element("xpath", '//*[@id="row-FRM000119"]/button')
      input_button.click()
      time.sleep(1)
      input_weight = driver.find_element("xpath", '//*[@id="sq_100i"]')
@@ -378,18 +627,18 @@ def inputGizi(driver, data):
      input_height = driver.find_element("xpath", '//*[@id="sq_101i"]')
      input_height.send_keys(data['tb'])
      time.sleep(0.5)
-     select_click = driver.find_element("xpath", '//*[@id="sq_102"]/div[2]/div')
-     select_click.click()
-     time.sleep(1)
-     select_option = driver.find_element("xpath", imt[data['imt']])
-     select_option.click()
+    #  select_click = driver.find_element("xpath", '//*[@id="sq_102"]/div[2]/div')
+    #  select_click.click()
+    #  time.sleep(1)
+    #  select_option = driver.find_element("xpath", imt[data['imt']])
+    #  select_option.click()
      time.sleep(1)
      button_submit = driver.find_element("xpath", '//*[@id="sv-nav-complete"]/div/input')
      button_submit.click()
      time.sleep(2)
 
 def inputTensi(driver,data):
-     input_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[5]/div[2]/div[2]/div[3]/div/div/div/div/div[4]/div/button')
+     input_button = driver.find_element("xpath", '//*[@id="row-FRM000266"]/button')
      input_button.click()
      time.sleep(1)
      input_systolic = driver.find_element("xpath", '//*[@id="sq_100i"]')
@@ -409,7 +658,7 @@ def inputGigi(driver, data):
      else:
         value = str(int(float(value)))
 
-     input_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[5]/div[2]/div[2]/div[4]/div/div/div/div/div[4]/div/button')
+     input_button = driver.find_element("xpath", '//*[@id="row-FRM000131"]/button')
      input_button.click()
      time.sleep(1)
      input_gigi = driver.find_element("xpath", gigi[value])
@@ -468,7 +717,7 @@ def inputMT(driver, data):
             '2': '//*[@id="sq_110"]/div[2]/fieldset/div[2]/label',
         },
     }
-    input_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[5]/div[2]/div[2]/div[5]/div/div/div/div/div[4]/div/button')
+    input_button = driver.find_element("xpath", '//*[@id="row-FRM000137"]/button')
     input_button.click()
     time.sleep(1)
     for i in range(1,12):
