@@ -17,7 +17,7 @@ password='Bojongasih#24'
 def main():
     url = "https://sehatindonesiaku.kemkes.go.id/auth/login"
     # Baca Excel dengan engine 'openpyxl' dan error handling yang jelas
-    excel_path = r'C:\Users\alvyf\My Project\input-sehat\DATA KLS 6.xlsx'
+    excel_path = r'C:\Users\alvyf\projects\input-sehat\DATA KLS 6.xlsx'
     df = pd.read_excel(excel_path, engine='openpyxl')
 
 

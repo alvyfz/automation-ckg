@@ -34,12 +34,12 @@ def main():
     time.sleep(15)
     ui.modal(driver)
     time.sleep(2)
-    ui.goToCommonServices(driver)
+    ui.goToCommonCKG(driver)
     time.sleep(2)
     # Loop through setiap baris di dataframe
     for index, row in df.iterrows():
         print("start input data", row)
-        ui.scanForm(driver, row)
+        ui.submitForm(driver, row)
         time.sleep(2)
     # ui.absence(driver)
 

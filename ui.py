@@ -2,6 +2,7 @@ import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 
 schools ={
@@ -23,6 +24,15 @@ schools ={
         'phoneNumber': '85287424436',
         'desa': '/html/body/div[3]/div[2]/div[4]/div/div[4]/button'
      }
+}
+
+kelurahan = {
+    'BOJONGASIH': '/html/body/div[3]/div[2]/div[4]/div/div[2]/button',
+    'TOBLONGAN': '/html/body/div[3]/div[2]/div[4]/div/div[7]/button',
+    'CIKADONGDONG': '/html/body/div[3]/div[2]/div[4]/div/div[3]/button',
+    'GIRIJAYA': '/html/body/div[3]/div[2]/div[4]/div/div[4]/button',
+    'MERTAJAYA': '/html/body/div[3]/div[2]/div[4]/div/div[5]/button',
+    'SINDANGSARI': '/html/body/div[3]/div[2]/div[4]/div/div[6]/button',
 }
 
 schoolData = schools['duabojongasih'] 
@@ -96,12 +106,26 @@ def modal(driver):
     continue_button = driver.find_element("xpath", '/html/body/div[1]/div[2]/div/div/div/div[2]/div[86]/div/button')
     continue_button.click()
 
-def goToCKGSchool(driver):
-    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[3]/div/button')
+def goToCommonCKG(driver):
+    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[1]/div/button')
     button_menu.click()
     time.sleep(1)
     button_ckg = driver.find_element("xpath", '//*[@id="menu_cari/daftarkan_individu"]')
     button_ckg.click()
+
+def goToCommonServices(driver):
+    button_menu = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[1]/div/div[2]/div/div/div[1]/div/button')
+    button_menu.click()
+    time.sleep(1)
+    button_ckg = driver.find_element("xpath", '//*[@id="menu_pelayanan"]')
+    button_ckg.click()
+    time.sleep(1)
+    button_sameLocation = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div[2]/div[2]/div/div/form/div[4]/div[1]/div[2]/div[1]/div/div/div[1]')
+    button_sameLocation.click()
+    time.sleep(1)
+    button_end = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div[2]/div[2]/div/div/form/div[5]/div/button')
+    button_end.click()
+
 
 def inputDate(driver, date):
         # Jika date bertipe timestamp, konversi ke string YYYY-MM-DD
@@ -119,7 +143,7 @@ def inputDate(driver, date):
     button_back_year = driver.find_element("xpath", '/html/body/div[3]/div/div/div[1]/button[1]')
     # Ambil tahun dari parameter date (format diasumsikan YYYY-MM-DD)
     year = int(date.split('-')[0])
-    clicks_needed = 2025 - year
+    clicks_needed = 2026 - year
     # Klik tombol mundur tahun sebanyak selisih tahun
     for _ in range(clicks_needed):
         button_back_year = driver.find_element("xpath", '/html/body/div[3]/div/div/div[1]/button[1]')
@@ -151,8 +175,8 @@ def inputSchool(driver):
     time.sleep(0.5)
 
 
-def address(driver):
-    input_address = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[13]/div[1]/div[2]/div')
+def address(driver,data):
+    input_address = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/form/div[1]/div/div[3]/div/div[2]')
     input_address.click()
     time.sleep(0.5)
     province = driver.find_element("xpath", '/html/body/div[3]/div[2]/div[4]/div/div[6]/button[2]')
@@ -164,85 +188,190 @@ def address(driver):
     district = driver.find_element("xpath", '/html/body/div[3]/div[2]/div[4]/div/div[3]/button')
     district.click()
     time.sleep(2)
-    subdistrict = driver.find_element("xpath", schoolData['desa'] )
+    subdistrict = driver.find_element("xpath", kelurahan[data['Kelurahan'].upper()] )
     subdistrict.click()
     time.sleep(1)
+    driver.find_element("xpath", '//*[@id="detail-domisili"]').send_keys(data['Alamat'])
 
      
 
 def submitForm(driver, data):
-    button_create = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[2]/div[2]/div[2]/div/button')
+    button_create = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[2]/div[2]/div[2]/div/button')
     button_create.click()
  
     time.sleep(1)
     input_nik = driver.find_element("xpath", '//*[@id="nik"]')
-    nik_value = str(data['nik'])
+    nik_value = str(data['NIK'])
     if nik_value.startswith("'"):
         nik_value = nik_value[1:]
     input_nik.send_keys(nik_value)
-    input_name = driver.find_element("xpath", '//*[@id="Nama Lengkap"]')
-    input_name.send_keys(data['name'])
-    time.sleep(0.5)
-    inputDate(driver, data['date'])
-    time.sleep(0.5)
-    jenis_kelamin = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]')
+    check_nik = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div/form/div[1]/div[1]/div[2]/div[1]/div[2]/button')
+    check_nik.click()
+    time.sleep(1)
+
+    try: 
+        successButton = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div[2]/div[2]/div/div/div[4]/div[2]/button')
+        successButton.click()
+        time.sleep(1)
+        selectDateAndFinishSubmit(driver, data)
+        return
+    except:
+        pass
+    driver.find_element("xpath", '//*[@id="Nama Lengkap"]').send_keys(data['name'])
+    inputDate(driver, data['Tgl.Lahir'])
+    jenis_kelamin = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div/form/div[1]/div[1]/div[5]/div/div[2]')
     jenis_kelamin.click()
     time.sleep(0.5)
     # Pilih jenis kelamin berdasarkan data['gender']
-    if data['gender'] == "L":
-        gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[1]')
+    if data['Jenis Kelamin'] == "Perempuan":
+        gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[2]')
     else:
-        gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[2]')
+        gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[1]')
     gender_option.click()
     time.sleep(0.5)
-    marital_status = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[6]/div/div[2]')
-    marital_status.click()
-    time.sleep(0.5)
-    marital_status_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[6]/div/div[2]/div[3]/div/div[3]')
-    marital_status_option.click()
-    time.sleep(0.5)
-    disability = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[7]/div/div[2]')
-    disability.click()
-    time.sleep(0.5)
-    disability_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[7]/div/div[2]/div[3]/div/div[1]')
-    disability_option.click()
-    time.sleep(0.5)
-    input_phone = driver.find_element("xpath", '//*[@id="No Whatsapp"]')
-    input_phone.send_keys(phoneNumber)
-    time.sleep(0.5)
-    inputSchool(driver)
-    time.sleep(0.5)
-    study = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[12]/div/div/div[2]')
-    study.click()
-    time.sleep(0.5)
-    study_option = driver.find_element("xpath", kelas[str(int(data['class']))])
-    study_option.click()
-    time.sleep(0.5)
-    address(driver)
-    time.sleep(0.5)
-    full_address = driver.find_element("xpath", '//*[@id="detail-domisili"]')
-    full_address.send_keys(data['address'])
-    time.sleep(0.5)
-    button_submit = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[2]/div/button')
-    button_submit.click()
-    time.sleep(3)
+    tlp = str(data['No Telp'])
+    if tlp.endswith('.0'):
+        tlp = tlp[:-2]
+    if len(tlp) < 11:
+        tlp = '085377715342'
+    if tlp.startswith('0'):
+        tlp = tlp[1:]
+    driver.find_element("xpath", '//*[@id="No Whatsapp"]').send_keys(str(tlp))
+    time.sleep(1)
+    selectDateAndFinishSubmit(driver,data)
+    return
 
-    # Cek apakah muncul modal error
+        
+        
+def selectDateAndFinishSubmit(driver, data):
+    selectDate = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div/form/div[1]/div[2]/div[2]/div/div[2]/div[2]/button[18]')
+    selectDate.click()
+    time.sleep(1)
     try:
-        error_modal = driver.find_element("xpath", '/html/body/div[1]/div[2]/div/div[2]/img')
-        if error_modal and error_modal.get_attribute("src") == "https://sehatindonesiaku.kemkes.go.id/images/icons/warning.png":
-            print("Gagal submit form", data['name'])
-            with open("failed_names.txt", "a", encoding="utf-8") as f:
-                f.write(data['name'] + "\n")
-            driver.refresh()
-            time.sleep(1)
-        else:
-            driver.refresh()
-            time.sleep(1)
-    except Exception:
-        pass
-        driver.refresh()
+        checkWali = driver.find_element("xpath", '//*[@id="noWali"]')
+        checkWali.click()
         time.sleep(1)
+    except Exception as e:
+        pass
+    continueButton = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div/form/div[2]/div/button')
+    continueButton.click()
+    time.sleep(1)
+    errorMessage = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div[2]/div[2]/div/div/div[1]/div')
+    error_text = errorMessage.text
+    print(error_text)
+
+    if error_text != 'Data peserta valid':
+        print("Error message is displayed")
+        print("Gagal submit form", data['name'])
+        with open("failed_names.txt", "a", encoding="utf-8") as f:
+            f.write(str(data['name']) + "\n")
+        driver.refresh()
+        return
+
+    successWithNik = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/div[2]/div[2]/div/div/div[3]/div/button')
+    successWithNik.click()
+    time.sleep(1)
+    try: 
+        driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/form/div[2]/div[2]/button').click()
+            
+        time.sleep(1)
+        pass
+    except Exception as e:
+        driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/form/div[1]/div/div[2]/div/div/div[2]/div').click()
+        time.sleep(1)
+        pekerjaan = data['Pekerjaan']
+        if pekerjaan == '':
+            pekerjaan = 'Pekerjaan Lain'
+
+        if "RUMAH" in pekerjaan.upper():
+            driver.find_element("xpath", '/html/body/div[3]/div[2]/div[2]/div/div[4]/button').click()
+        else:
+            driver.find_element("xpath", '/html/body/div[3]/div[2]/div[2]/div/div[1]/button').click()
+        time.sleep(1)
+        address(driver, data)
+        time.sleep(1)
+        driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[6]/form/div[2]/div[2]/button').click()
+        pass
+    time.sleep(1)
+    driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[3]/div[3]/div/table/tbody/tr/td[5]/div/button').click()
+    time.sleep(1)
+    driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div/div[3]/div[5]/div[2]/div/button').click()
+    time.sleep(2)
+     
+    successMessageEnd = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[3]/div[5]/div[2]/div/div[1]/div[2]')
+    if successMessageEnd.is_displayed():
+        print("Success message is displayed")
+        print("Berhasil submit form", data['name'])
+        driver.refresh()
+        return
+     
+    
+     
+       
+
+    # input_name = driver.find_element("xpath", '//*[@id="Nama Lengkap"]')
+    # input_name.send_keys(data['name'])
+    # time.sleep(0.5)
+    # inputDate(driver, data['date'])
+    # time.sleep(0.5)
+    # jenis_kelamin = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]')
+    # jenis_kelamin.click()
+    # time.sleep(0.5)
+    # # Pilih jenis kelamin berdasarkan data['gender']
+    # if data['gender'] == "L":
+    #     gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[1]')
+    # else:
+    #     gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[5]/div/div[2]/div[3]/div/div[2]')
+    # gender_option.click()
+    # time.sleep(0.5)
+    # marital_status = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[6]/div/div[2]')
+    # marital_status.click()
+    # time.sleep(0.5)
+    # marital_status_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[6]/div/div[2]/div[3]/div/div[3]')
+    # marital_status_option.click()
+    # time.sleep(0.5)
+    # disability = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[7]/div/div[2]')
+    # disability.click()
+    # time.sleep(0.5)
+    # disability_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[7]/div/div[2]/div[3]/div/div[1]')
+    # disability_option.click()
+    # time.sleep(0.5)
+    # input_phone = driver.find_element("xpath", '//*[@id="No Whatsapp"]')
+    # input_phone.send_keys(phoneNumber)
+    # time.sleep(0.5)
+    # inputSchool(driver)
+    # time.sleep(0.5)
+    # study = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[12]/div/div/div[2]')
+    # study.click()
+    # time.sleep(0.5)
+    # study_option = driver.find_element("xpath", kelas[str(int(data['class']))])
+    # study_option.click()
+    # time.sleep(0.5)
+    # address(driver)
+    # time.sleep(0.5)
+    # full_address = driver.find_element("xpath", '//*[@id="detail-domisili"]')
+    # full_address.send_keys(data['address'])
+    # time.sleep(0.5)
+    # button_submit = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[2]/div/button')
+    # button_submit.click()
+    # time.sleep(3)
+
+    # # Cek apakah muncul modal error
+    # try:
+    #     error_modal = driver.find_element("xpath", '/html/body/div[1]/div[2]/div/div[2]/img')
+    #     if error_modal and error_modal.get_attribute("src") == "https://sehatindonesiaku.kemkes.go.id/images/icons/warning.png":
+    #         print("Gagal submit form", data['name'])
+    #         with open("failed_names.txt", "a", encoding="utf-8") as f:
+    #             f.write(data['name'] + "\n")
+    #         driver.refresh()
+    #         time.sleep(1)
+    #     else:
+    #         driver.refresh()
+    #         time.sleep(1)
+    # except Exception:
+    #     pass
+    #     driver.refresh()
+    #     time.sleep(1)
         
 
 
@@ -300,103 +429,76 @@ def filterBySchoolAndClasses(driver):
     time.sleep(0.5)
 
 def scanForm(driver, data):
-    target_name = data['nama'].strip().upper()
-    # Tunggu tabel muncul sekali di luar loop
-    wait = WebDriverWait(driver, 1)
-
-    while True:
-        # Cek apakah nama ada di halaman saat ini
-        try:
-            wait.until(EC.presence_of_element_located((By.XPATH, '//tr[contains(@class,"p-2 border-b-solid")]')))
-        except Exception:
-            return False  # Tabel tidak muncul
-
-        # Gunakan XPath langsung untuk nama target
-        # Tangani kemungkinan tanda kutip tunggal di nama target
+    form_type = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[4]/div[2]/div[2]/div[1]/div')
+    form_type.click()
+    select_nik = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[4]/div[2]/div[2]/div[1]/div/div[3]/div/div[3]')
+    select_nik.click()
+    form_nik = driver.find_element("xpath", '//*[@id="searchNik"]')
+    form_nik.send_keys(data['NIK'])
+    form_nik.send_keys(Keys.ENTER)
+    time.sleep(2)
+    try:
+        button_submit = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[4]/div[4]/div/table/tbody/tr/td[9]/div/div/button')
+        button_submit.click()
+        time.sleep(2)
+        fillScanningForm(driver, data)
+    except Exception:
+        with open("failed_names.txt", "a", encoding="utf-8") as f:
+            f.write(str(data['name']) + "\n")
+        goToCGKServ(driver)
+        return False
  
-        # Build XPath that matches any text content (including special chars like .,-' and others) after upper-casing both sides
-        # target_xpath = (
-        #     '//tr[contains(@class,"p-2 border-b-solid") and '
-        #     './td[2][normalize-space(translate(text(),'
-        #     '"abcdefghijklmnopqrstuvwxyzàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿžšœ.-,",'
-        #     '"ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞŸŽŠŒ.-,"))='
-        #     f'"{escaped_target}"]]'
-        # )
-        target_xpath = (
-            '//tr[contains(@class,"p-2 border-b-solid") and '
-            './td[2][normalize-space(translate(text(),'
-            '"abcdefghijklmnopqrstuvwxyzàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿžšœ.-,",'
-            '"ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞŸŽŠŒ.-,"))='
-            f'"{target_name}"]]'
-        )
-        targets = driver.find_elements(By.XPATH, target_xpath)
-        if targets:
-            # Klik tombol “Mulai” pada baris yang sesuai
-            button = targets[0].find_element(By.XPATH, './/button[@type="button"]')
-            button.click()
-            time.sleep(1)
-            fillScanningForm(driver, data)
-            return True
-
-        # Cek apakah masih ada halaman berikutnya
-        try:
-            next_link = driver.find_element(By.XPATH, '//li[contains(@class,"page-item") and not(contains(@class,"disabled"))]/a[@class="page-link" and text()=">"]')
-            next_link.click()
-            # Tunggu tabel baru muncul, maksimal 1 detik
-            wait.until(EC.staleness_of(targets[0]) if targets else lambda d: True)
-        except Exception:
-            # Tidak ada halaman lagi
-            with open("failed_names.txt", "a", encoding="utf-8") as f:
-                f.write(data['nama'] + "\n")
-            goToCGKServ(driver)
-            return False
+    # fillScanningForm(driver, data)
 
 def fillScanningForm(driver, data):
     # Klik tombol “Mulai” di bagian atas halaman
-    start_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/button')
+    start_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/button')
     start_button.click()
+    time.sleep(1)
+    confirm_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div/div[4]/div[2]/button')
+    confirm_button.click()
     time.sleep(1)
     inputGizi(driver, data)
     inputTensi(driver, data)
-    inputGigi(driver, data)
-    inputMT(driver, data)
     goToCGKServ(driver)
 
 def goToCGKServ(driver):
-    driver.get("https://sehatindonesiaku.kemkes.go.id/ckg-pelayanan-sekolah?back=true")
+    driver.get("https://sehatindonesiaku.kemkes.go.id/ckg-pelayanan")
     driver.refresh()
     time.sleep(1)
 
+    
+
 
 def inputGizi(driver, data):
-     input_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[5]/div[2]/div[2]/div[2]/div/div/div/div/div[4]/div/button')
+     input_button = driver.find_element("xpath", '//*[@id="rowfrm000051"]/button')
      input_button.click()
      time.sleep(1)
      input_weight = driver.find_element("xpath", '//*[@id="sq_100i"]')
-     input_weight.send_keys(data['bb'])
+     input_weight.send_keys(data['Berat Badan'])
      time.sleep(0.5)
      input_height = driver.find_element("xpath", '//*[@id="sq_101i"]')
-     input_height.send_keys(data['tb'])
+     input_height.send_keys(data['Tinggi'])
      time.sleep(0.5)
-     select_click = driver.find_element("xpath", '//*[@id="sq_102"]/div[2]/div')
-     select_click.click()
-     time.sleep(1)
-     select_option = driver.find_element("xpath", imt[data['imt']])
-     select_option.click()
+     input_lingkar = driver.find_element("xpath", '//*[@id="sq_102i"]')
+     input_lingkar.send_keys(data['Lingkar Perut'])
      time.sleep(1)
      button_submit = driver.find_element("xpath", '//*[@id="sv-nav-complete"]/div/input')
      button_submit.click()
      time.sleep(2)
 
 def inputTensi(driver,data):
-     input_button = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[5]/div[2]/div[2]/div[3]/div/div/div/div/div[4]/div/button')
+     input_button = driver.find_element("xpath", '//*[@id="rowfrm000265"]/button')
      input_button.click()
      time.sleep(1)
-     input_systolic = driver.find_element("xpath", '//*[@id="sq_100i"]')
-     input_systolic.send_keys(data['sistol'])
+     input_is_high = driver.find_element("xpath", '//*[@id="sq_100"]/div[2]/fieldset/div[2]/label')
+     input_is_high.click()
      time.sleep(0.5)
-     input_diastolic = driver.find_element("xpath", '//*[@id="sq_101i"]')
-     input_diastolic.send_keys(data['diastol'])
+     input_systolic = driver.find_element("xpath", '//*[@id="sq_102i"]')
+     input_systolic.send_keys(data['Sistole'])
+     time.sleep(0.5)
+     input_diastolic = driver.find_element("xpath", '//*[@id="sq_103i"]')
+     input_diastolic.send_keys(data['Diastole'])
      time.sleep(0.5)
      button_submit = driver.find_element("xpath", '//*[@id="sv-nav-complete"]/div/input')
      button_submit.click()
