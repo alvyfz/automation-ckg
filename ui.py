@@ -4,7 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-
 schools = {
     "mas_al_istiqlaliyyah": {
         "school": "MAS AL-ISTIQLALIYYAH",
@@ -39,13 +38,13 @@ schools = {
     "mis_attaufiq": {
         "school": "MIS ATTAUFIQ",
         "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MIS ATTAUFIQ"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
-        "phoneNumber": "",
+        "phoneNumber": "82119221427",
         "desa": "",
     },
     "mis_balekambang": {
         "school": "MIS BALEKAMBANG",
         "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="MIS BALEKAMBANG"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
-        "phoneNumber": "",
+        "phoneNumber": "81214133967",
         "desa": "",
     },
     "mis_cililitan": {
@@ -105,8 +104,8 @@ schools = {
     "sdn_2_bojongasih": {
         "school": "SDN 2  BOJONGASIH",
         "xpath": '//div[contains(@class,"cursor-pointer")]//div[normalize-space()="SDN 2 BOJONGASIH"]/ancestor::div[contains(@class,"cursor-pointer")][1]',
-        "phoneNumber": "",
-        "desa": "",
+        "phoneNumber": "85287424436",
+        "desa": "Girijaya",
     },
     "sdn_2_toblongan": {
         "school": "SDN 2 TOBLONGAN",
@@ -368,12 +367,12 @@ def inputDate(driver, date):
     button_back_year = driver.find_element("xpath", '/html/body/div[3]/div/div/div[1]/button[1]')
     # Ambil tahun dari parameter date (format diasumsikan YYYY-MM-DD)
     year = int(date.split('-')[0])
-    clicks_needed = 2025 - year
+    clicks_needed = 2026 - year
     # Klik tombol mundur tahun sebanyak selisih tahun
     for _ in range(clicks_needed):
         button_back_year = driver.find_element("xpath", '/html/body/div[3]/div/div/div[1]/button[1]')
         button_back_year.click()
-        time.sleep(0.3)
+        time.sleep(0.5)
 
     # Klik bulan (data-month = bulan - 1)
     monthDate = date.split('-')[1]
@@ -400,22 +399,33 @@ def inputSchool(driver):
     time.sleep(0.5)
 
 
-def address(driver):
-    input_address = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[3]/div/form/div[1]/div[1]/div[13]/div[1]/div[2]/div')
+def address(driver, data):
+    input_address = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[7]/div[1]/div[2]')
     input_address.click()
     time.sleep(0.5)
     province = driver.find_element("xpath", '/html/body/div[3]/div[2]/div[4]/div/div[6]/button[2]')
     province.click()
-    time.sleep(2)
+    time.sleep(1)
     city = driver.find_element("xpath", '/html/body/div[3]/div[2]/div[4]/div/div[19]/button')
     city.click()
-    time.sleep(2)
+    time.sleep(1)
     district = driver.find_element("xpath", '/html/body/div[3]/div[2]/div[4]/div/div[3]/button')
     district.click()
-    time.sleep(2)
-    subdistrict = driver.find_element("xpath", schoolData['desa'] )
-    subdistrict.click()
     time.sleep(1)
+    subdistrict = driver.find_element(
+        "xpath",
+        '//div[contains(@class,"gap-2") and normalize-space(text())="{desa}"]/ancestor::button[1]'.format(
+            desa=data['desa']
+        ),
+    )
+    subdistrict.click()
+    time.sleep(2)
+    # Locate and interact with the detailed address textarea
+    detail_address = driver.find_element("xpath", '//*[@id="detail-domisili"]')
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", detail_address)
+    time.sleep(0.5)
+    detail_address.send_keys(str(data['address']))
+    time.sleep(0.5)
 
      
 
@@ -433,11 +443,42 @@ def submitForm(driver, data):
     button_search = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[1]/div[2]/div[1]/div[2]/button')
     button_search.click()
     time.sleep(1)
+    is_manual = False
     try: 
-        successButton = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div[2]/div[2]/div/div/div[4]/div[2]/button')
+        successButton = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div[2]/div[2]/div/div/div[4]/div[2]/button')
         successButton.click()
         time.sleep(1)
-        return selectAndFinish(driver, data)
+    except Exception:
+        is_manual = True
+        print("Gagal submit form", data['name'])
+        name = driver.find_element("xpath", '//*[@id="Nama Lengkap"]')
+        name.send_keys(data['name'])
+        time.sleep(0.5)
+        inputDate(driver, data['date'])
+        time.sleep(1)
+        gender_input = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[1]/div[5]/div/div[2]')
+        gender_input.click()
+        time.sleep(0.5)
+        if data['gender'] == 'L':
+            gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[1]/div[5]/div/div[2]/div[3]/div/div[1]')
+        else:
+            gender_option = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[1]/div[5]/div/div[2]/div[3]/div/div[2]')
+        gender_option.click()
+        time.sleep(0.5)
+        whatsapp_input = driver.find_element("xpath", '//*[@id="No Whatsapp"]')
+        whatsapp_input.send_keys(data['phone'])
+        time.sleep(1)
+    selectAndFinish(driver, data, is_manual)
+
+
+def selectAndFinish(driver, data, is_manual = False):
+    next_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[3]/div/button')
+    next_button.click()
+    time.sleep(1)
+    try:
+        next_button3 = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div[2]/div[2]/div/div/div[3]/div/button')
+        next_button3.click()
+        pass
     except Exception:
         print("Gagal submit form", data['name'])
         with open("failed_names.txt", "a", encoding="utf-8") as f:
@@ -445,18 +486,40 @@ def submitForm(driver, data):
         driver.refresh()
         time.sleep(1)
         return False
-
-
-def selectAndFinish(driver, data):
-    next_button = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[1]/div/div[3]/div/button')
-    next_button.click()
+    
+    if is_manual == True:
+        disability_input = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[2]/div/div[2]')
+        disability_input.click()
+        time.sleep(0.5)
+        disability_select = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[2]/div/div[2]/div[3]/div/div[1]')
+        disability_select.click()
+        time.sleep(0.5)
+        school = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[4]/div/div/div/div[2]/div')
+        school.click()
+        time.sleep(0.5)
+        gui_school_name = (schoolData.get("school", "") if schoolData else "").strip()
+        excel_school_name = ""
+        try:
+            excel_school_name = str(data.get("school", "")).strip()
+        except Exception:
+            excel_school_name = ""
+        school_name_for_select = gui_school_name or excel_school_name
+        if not school_name_for_select:
+            school_name_for_select = school.strip()
+        school_option = driver.find_element(
+            "xpath",
+            '//div[contains(@class,"gap-2") and normalize-space(text())="{name}"]/ancestor::button[1]'.format(
+                name=school_name_for_select
+            ),
+        )
+        school_option.click()
+        time.sleep(0.5)
+        address(driver, data)
+        time.sleep(0.5)
     time.sleep(1)
-    next_button2 = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div[2]/div[2]/div/div/div[3]/div/button')
-    next_button2.click()
-    time.sleep(1)
-    study = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[6]/div/div/div/div[2]/div')
+    study = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[6]/div[2]/div/div/div[5]/div/div/form[2]/div/div[6]/div/div/div/div[2]/div/div[1]')
     study.click()
-    time.sleep(0.5)
+    time.sleep(1)
     study_option = driver.find_element("xpath", kelas[str(int(data['class']))])
     study_option.click()
     time.sleep(0.5)
@@ -487,7 +550,12 @@ def absence (driver):
     school_select = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div[1]/div/div/div[2]')
     school_select.click()
     time.sleep(0.5)
-    school_option = driver.find_element("xpath", f'//div[text()="{school}"]')
+    school_option = driver.find_element(
+        "xpath",
+        '//div[contains(@class,"gap-2") and normalize-space(text())="{name}"]/ancestor::button[1]'.format(
+            name=school.strip()
+        ),
+    )
     school_option.click()
     time.sleep(0.5)
     class_select = driver.find_element("xpath", '/html/body/div[1]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div[2]/div/div/div[2]')
@@ -526,7 +594,12 @@ def filterBySchoolAndClasses(driver):
     school_select = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div/div[2]/div[1]/div/div/div')
     school_select.click()
     time.sleep(0.5)
-    school_option = driver.find_element("xpath", f'//div[text()="{school}"]')
+    school_option = driver.find_element(
+        "xpath",
+        '//div[contains(@class,"gap-2") and normalize-space(text())="{name}"]/ancestor::button[1]'.format(
+            name=school.strip()
+        ),
+    )
     school_option.click()
     time.sleep(0.5)
     class_select = driver.find_element("xpath", '//*[@id="__nuxt"]/main/div/div[1]/section[2]/div/div/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div')

@@ -41,8 +41,10 @@ def _write_failed_download(
                 f.write(n + "\n")
 
 
-def run(excel_path: str) -> None:
+def run(excel_path: str, *, school_key: str | None = None) -> None:
     url = "https://sehatindonesiaku.kemkes.go.id/auth/login"
+    if school_key is not None:
+        ui.set_school(school_key)
     df = pd.read_excel(excel_path, engine='openpyxl')
 
     failed_rows: list[pd.Series] = []

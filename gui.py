@@ -18,6 +18,17 @@ def _is_excel_file(path: str) -> bool:
     return p.exists() and p.is_file() and p.suffix.lower() in {".xlsx", ".xlsm", ".xls"}
 
 
+def _build_school_picker() -> tuple[list[str], dict[str, str], str]:
+    school_items = sorted(
+        [(key, value.get("school", key)) for key, value in ui.schools.items()],
+        key=lambda x: x[1].lower(),
+    )
+    school_names = [name for _, name in school_items]
+    school_key_by_name = {name: key for key, name in school_items}
+    default_name = school_names[0] if school_names else ""
+    return school_names, school_key_by_name, default_name
+
+
 class App(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
@@ -83,12 +94,30 @@ class App(tk.Tk):
 
         _, excel_var = self._build_file_input(parent, label="File Excel")
 
+        school_names, school_key_by_name, default_school = _build_school_picker()
+
+        school_frame = ttk.Frame(parent)
+        school_frame.pack(fill="x", pady=8)
+        ttk.Label(school_frame, text="Sekolah", width=14).pack(side="left")
+        school_var = tk.StringVar(value=default_school)
+        school_combo = ttk.Combobox(
+            school_frame, textvariable=school_var, values=school_names, state="readonly"
+        )
+        school_combo.pack(side="left", fill="x", expand=True, padx=6)
+
         def run_daftar() -> None:
             excel_path = excel_var.get().strip()
             if not _is_excel_file(excel_path):
                 messagebox.showerror("Error", "Pilih file Excel yang valid untuk Daftar.")
                 return
-            self._run_async("Daftar", lambda: main.run(excel_path))
+            selected_school_name = school_var.get().strip()
+            school_key = school_key_by_name.get(selected_school_name, selected_school_name)
+
+            def job() -> None:
+                ui.set_school(school_key)
+                main.run(excel_path, school_key=school_key)
+
+            self._run_async("Daftar", job)
 
         ttk.Button(parent, text="Jalankan Daftar", command=run_daftar).pack(anchor="w", pady=8)
 
@@ -99,17 +128,12 @@ class App(tk.Tk):
 
         _, excel_var = self._build_file_input(parent, label="File Excel")
 
-        school_items = sorted(
-            [(key, value.get("school", key)) for key, value in ui.schools.items()],
-            key=lambda x: x[1].lower(),
-        )
-        school_names = [name for _, name in school_items]
-        school_key_by_name = {name: key for key, name in school_items}
+        school_names, school_key_by_name, default_school = _build_school_picker()
 
         school_frame = ttk.Frame(parent)
         school_frame.pack(fill="x", pady=8)
         ttk.Label(school_frame, text="Sekolah", width=14).pack(side="left")
-        school_var = tk.StringVar(value=school_names[0] if school_names else "")
+        school_var = tk.StringVar(value=default_school)
         school_combo = ttk.Combobox(
             school_frame, textvariable=school_var, values=school_names, state="readonly"
         )
