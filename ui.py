@@ -596,7 +596,7 @@ def filterBySchoolAndClasses(driver):
     time.sleep(0.5)
     school_option = driver.find_element(
         "xpath",
-        '//div[contains(@class,"gap-2") and normalize-space(text())="{name}"]/ancestor::button[1]'.format(
+        '//div[normalize-space(text())="{name}"]/ancestor::div[contains(@class, "cursor-pointer")][1]'.format(
             name=school.strip()
         ),
     )
